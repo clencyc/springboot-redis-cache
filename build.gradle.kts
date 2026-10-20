@@ -24,19 +24,26 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-	implementation("org.springframework.boot:spring-boot-starter-web") // ✅ Core web framework
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+
+	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+	testImplementation("org.testcontainers:testcontainers-postgresql")
+	testRuntimeOnly("org.postgresql:postgresql")
 	// Core Testing Engine (CRUCIAL: Provides MockMvc and AutoConfigureMockMvc)
-	testImplementation("org.springframework.boot:spring-boot-starter-test") // ✅ This exact line fixes your error!
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	// Integration Test Framework components
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter:1.19.7")
+	testImplementation("org.testcontainers:testcontainers-postgresql")
+	runtimeOnly("org.postgresql:postgresql")
 
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 }

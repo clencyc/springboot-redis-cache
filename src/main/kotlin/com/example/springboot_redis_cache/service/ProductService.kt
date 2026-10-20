@@ -14,7 +14,7 @@ class ProductService(
     private val productRepository: ProductRepository
 ) {
 
-    @CachePut("PRODUCT_CACHE", key = "#result.id()")
+    @CachePut("PRODUCT_CACHE", key = "#result.id")
     fun createProduct(productDto: ProductDTO): ProductDTO {
         val product = Product(
             id = 0L,
@@ -35,7 +35,7 @@ class ProductService(
     }
 
 
-    @CachePut("PRODUCT_CACHE", key = "#result.id()")
+    @CachePut("PRODUCT_CACHE", key = "#result.id")
     fun updateProduct(productDto: ProductDTO): ProductDTO {
         val productId = productDto.id
             ?: throw IllegalArgumentException("Product ID must not be null for updates")
@@ -52,7 +52,7 @@ class ProductService(
         return updatedProduct.toDto()
     }
 
-    @CacheEvict("PRODUCT_CACHE", key="#product.id()")
+    @CacheEvict("PRODUCT_CACHE", key="#productId")
     fun deleteProduct(productId: Long) {
         productRepository.deleteById(productId)
     }
