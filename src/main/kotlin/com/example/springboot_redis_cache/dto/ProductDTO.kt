@@ -1,5 +1,7 @@
 package com.example.springboot_redis_cache.dto
 
+import java.math.BigDecimal
+
 data class ProductDTO(
     val id: Long?,
 
