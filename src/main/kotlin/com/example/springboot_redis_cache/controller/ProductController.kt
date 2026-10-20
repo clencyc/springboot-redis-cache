@@ -1,5 +1,6 @@
 package com.example.springboot_redis_cache.controller
 
+import com.example.springboot_redis_cache.dto.ProductDTO
 import com.example.springboot_redis_cache.entity.Product
 import com.example.springboot_redis_cache.service.ProductService
 import org.springframework.http.HttpStatus
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
-
 @RestController
 @RequestMapping("/api/products")
 class ProductController (
@@ -21,26 +21,30 @@ class ProductController (
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProduct(@RequestBody product: Product): Product {
-        return productService.createProduct(product)
+    fun createProduct(@RequestBody productDto: ProductDTO): ProductDTO {
+        return productService.createProduct(productDto)
     }
+
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    fun getProduct(@PathVariable productId: Long): Product {
+    fun getProduct(@PathVariable productId: Long): ProductDTO {
         return productService.getProduct(productId)
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    fun updateProduct(product: Product): Product {
-        return productService.updateProduct(product)
+    fun updateProduct(@RequestBody productDto: ProductDTO): ProductDTO {
+        return productService.updateProduct(productDto)
     }
 
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProduct(@PathVariable productId: Long) {
-        return productService.deleteProduct(productId)
+        productService.deleteProduct(productId)
     }
-
 }
+
+// Adding and updating product -> add something to cache
+// deleteproduct -> delete also from cache
+// getproduct -> fetch from the cache

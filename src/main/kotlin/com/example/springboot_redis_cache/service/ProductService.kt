@@ -3,25 +3,30 @@ package com.example.springboot_redis_cache.service
 import com.example.springboot_redis_cache.dto.ProductDTO
 import com.example.springboot_redis_cache.entity.Product
 import com.example.springboot_redis_cache.repository.ProductRepository
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class ProductService(
     private val productRepository: ProductRepository
 ) {
 
+    @CachePut("PRODUCT_CACHE", key = "#result.id()")
     fun createProduct(productDto: ProductDTO): ProductDTO {
-        // Map DTO to Entity structure
         val product = Product(
-            id = 0L, // Let database auto-generate, or use productDto.id
+            id = 0L,
             name = productDto.name,
             price = productDto.price
         )
 
         val savedProduct = productRepository.save(product)
-        return savedProduct.toDto() // Uses our extension function
+        return savedProduct.toDto()
     }
 
+    @Cacheable("PRODUCT_CACHE", key = "#productId")
     fun getProduct(productId: Long): ProductDTO {
         val product = productRepository.findById(productId)
             .orElseThrow { IllegalArgumentException("Cannot find product with id $productId") }
@@ -29,6 +34,8 @@ class ProductService(
         return product.toDto()
     }
 
+
+    @CachePut("PRODUCT_CACHE", key = "#result.id()")
     fun updateProduct(productDto: ProductDTO): ProductDTO {
         val productId = productDto.id
             ?: throw IllegalArgumentException("Product ID must not be null for updates")
@@ -45,7 +52,17 @@ class ProductService(
         return updatedProduct.toDto()
     }
 
+    @CacheEvict("PRODUCT_CACHE", key="#product.id()")
     fun deleteProduct(productId: Long) {
         productRepository.deleteById(productId)
     }
+}
+
+
+fun Product.toDto(): ProductDTO {
+    return ProductDTO(
+        id = this.id,
+        name = this.name ?: "",
+        price = this.price ?: BigDecimal.ZERO
+    )
 }
